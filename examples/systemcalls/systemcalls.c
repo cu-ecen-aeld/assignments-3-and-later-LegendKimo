@@ -1,5 +1,11 @@
 #include "systemcalls.h"
-
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include<errno.h>
+#include<string.h>
+ #include <fcntl.h>
 /**
  * @param cmd the command to execute with system()
  * @return true if the command in @param cmd was executed
@@ -16,6 +22,11 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
+ int ret;
+ret=system(cmd);
+ if(ret ==-1){
+    return false ;
+ }
 
     return true;
 }
@@ -43,6 +54,7 @@ bool do_exec(int count, ...)
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
+
     }
     command[count] = NULL;
     // this line is to avoid a compile warning before your implementation is complete
@@ -58,9 +70,51 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+int pid;
+int  wstatus;
+int pids[5]={};
+int child_err [5]={};
 
+ pid= fork();
+if(pid==0){
+    //printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem child[%d]  \n" , getpid());
+           //printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem command[] = %s \n",*command);
+    int ex_ret =execv(command[0],command);
+    if(ex_ret==-1)
+   { 
+
+   // printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem  there is an issue in child[%d] which is %d \n" , getpid(),errno);
+    child_err[0] =  true;
+    exit(EXIT_FAILURE);
+    }
+}
+else{
+pids[0]=pid;
+    //printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem  there is an issue in child[%d] which is %d \n" , getpid(),child_err[0] );
+}
+
+
+            if (waitpid(pids[0], &wstatus, 0) == -1) {
+            perror("waitpid failed");
+            child_err[0] = true;
+            //continue;
+        }
+        if (WIFEXITED(wstatus)) {
+    int code = WEXITSTATUS(wstatus);
+    if (code != 0) {
+        child_err[0] = true;
+        printf("the code is %d ",code);
+        }
+}
+
+   // printf("pids[%d] child has status %d \n",pids[0],child_err[0]);
+if(child_err[0]==true) {
+   //printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem fail \n ");
+return false ;
+}
+//}
     va_end(args);
-
+//printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem  Pass  \n");
     return true;
 }
 
@@ -93,7 +147,58 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *
 */
 
-    va_end(args);
+int pid;
+int  wstatus;
+int pids[5]={};
+int child_err [5]={};
+int fd = open(outputfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    if (fd < 0) {
+        perror("open");
+        return 1;
+    }
+ pid= fork();
+if(pid==0){
+    printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem child[%d]  \n" , getpid());
+           printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem command[] = %s \n",*command);
+    dup2(fd, STDOUT_FILENO);  // redirect stdout to the file
+        close(fd);
+    int ex_ret =execv(command[0],command);
+    if(ex_ret==-1)
+   { 
 
+    printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem  there is an issue in child[%d] which is %d \n" , getpid(),errno);
+    child_err[0] =  true;
+    //exit(EXIT_FAILURE);
+    }
+}
+else{
+close(fd);
+pids[0]=pid;
+
+}
+
+
+            if (waitpid(pids[0], &wstatus, 0) == -1) {
+            perror("waitpid failed");
+            child_err[0] = true;
+            //continue;
+        }
+        if (WIFEXITED(wstatus)) {
+    int code = WEXITSTATUS(wstatus);
+    if (code != 0) {
+        child_err[0] = true;
+        printf("the code is %d ",code);
+        }
+}
+
+    printf("pids[%d] child has status %d \n",pids[0],child_err[0]);
+if(child_err[0]==true) {
+   printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem fail \n ");
+return false ;
+}
+//}
+    va_end(args);
+printf("Debug_kareeeeeeeeeeeeeeeeeeeeeeem  Pass  \n");
     return true;
+
 }
