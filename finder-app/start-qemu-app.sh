@@ -7,7 +7,7 @@ set -e
 OUTDIR=$1
 
 if [ -z "${OUTDIR}" ]; then
-    OUTDIR=/tmp/aeld
+    OUTDIR=~/Documents/outdir_assign3/
     echo "No outdir specified, using ${OUTDIR}"
 fi
 
