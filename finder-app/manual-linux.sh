@@ -5,7 +5,7 @@
 set -e
 set -u
 
-OUTDIR=~/Documents/outdir_assign3/
+OUTDIR=~/Documents/outdir_assign3/ 
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.15.163
 BUSYBOX_VERSION=1_33_1
@@ -110,7 +110,7 @@ cp ~/Documents/coursera_embeddedLinux/assignments-3-and-later-LegendKimo/finder-
 cp ~/Documents/coursera_embeddedLinux/assignments-3-and-later-LegendKimo/finder-app/conf/username.txt ./rootfs/home/conf
 cp ~/Documents/coursera_embeddedLinux/assignments-3-and-later-LegendKimo/finder-app/conf/assignment.txt ./rootfs/home/conf
 cp ~/Documents/coursera_embeddedLinux/assignments-3-and-later-LegendKimo/finder-app/writer.sh ./rootfs/home
-# TODO: Chown the root directory
+# TODO: Chown the root  directory
 cd ./rootfs/
 sudo chown -R root:root *
 
