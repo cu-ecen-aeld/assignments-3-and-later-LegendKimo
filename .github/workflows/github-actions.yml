@@ -30,14 +30,26 @@ jobs:
           git submodule update --init --recursive
           cp -r . ..
 
-      - name: Run unit test
-        run : |
-          git submodule update --init --recursive
-
       - name: Confirm checked out commit
         run: |
           echo "HEAD: $(git rev-parse HEAD)"
           git log -1
+
+      - name: Install kernel build dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            gcc-aarch64-linux-gnu \
+            flex \
+            bison \
+            libssl-dev \
+            libelf-dev \
+            bc \
+            psmisc
+      - name: Run unit test
+        run : ./unit-test.sh
+
+
 
       - name: Run fulltest
         run: ./full-test.sh
