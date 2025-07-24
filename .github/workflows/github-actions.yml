@@ -35,21 +35,21 @@ jobs:
           echo "HEAD: $(git rev-parse HEAD)"
           git log -1
 
-      - name: Install kernel build dependencies
-        run: |
-          apt-get update
-          apt-get install -y \
-            gcc-aarch64-linux-gnu \
-            flex \
-            bison \
-            libssl-dev \
-            libelf-dev \
-            bc \
-            psmisc
+      # - name: Install kernel build dependencies
+      #   run: |
+      #     apt-get update
+      #     apt-get install -y \
+      #       gcc-aarch64-linux-gnu \
+      #       flex \
+      #       bison \
+      #       libssl-dev \
+      #       libelf-dev \
+      #       bc \
+      #       psmisc
       - name: Prepare /tmp/aesd-autograder from outdir_assign3
         run: |
           sudo mkdir -p /tmp/aesd-autograder
-          sudo cp -v outdir_assign3/* /tmp/aesd-autograder/
+          sudo cp -v ~/Documents/outdir_assign3/* /tmp/aesd-autograder/
           ls -lh /tmp/aesd-autograder
       - name: Run fulltest
         run: sudo SKIP_BUILD=1 DO_VALIDATE=1 ./full-test.sh
