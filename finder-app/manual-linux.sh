@@ -5,7 +5,7 @@
 set -e
 set -u
 
-OUTDIR=~/Documents/outdir_assign3/ 
+OUTDIR=/tmp/aesd-autograder
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.15.163
 BUSYBOX_VERSION=1_33_1
@@ -97,6 +97,7 @@ sudo mknod -m 666 dev/null c 1 3
 sudo mknod -m 600 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
+ls -al
 cd ./finder-app/
 make clean
 make CROSS_COMPILE=aarch64-linux-gnu- writer
