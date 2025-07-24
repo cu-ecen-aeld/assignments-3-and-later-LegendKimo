@@ -46,7 +46,11 @@ jobs:
             libelf-dev \
             bc \
             psmisc
-
+      - name: Prepare /tmp/aesd-autograder from outdir_assign3
+        run: |
+          sudo mkdir -p /tmp/aesd-autograder
+          sudo cp -v outdir_assign3/* /tmp/aesd-autograder/
+          ls -lh /tmp/aesd-autograder
       - name: Run fulltest
         run: sudo SKIP_BUILD=1 DO_VALIDATE=1 ./full-test.sh
 
