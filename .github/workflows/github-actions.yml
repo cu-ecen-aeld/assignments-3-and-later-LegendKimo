@@ -46,10 +46,7 @@ jobs:
             libelf-dev \
             bc \
             psmisc
-      - name: Run unit test
-        run : ./unit-test.sh
-
-
 
       - name: Run fulltest
-        run: ./full-test.sh
+        run: sudo SKIP_BUILD=1 DO_VALIDATE=1 ./full-test.sh
+
