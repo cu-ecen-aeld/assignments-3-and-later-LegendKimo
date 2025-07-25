@@ -6,6 +6,7 @@ set -e
 set -u
 
 OUTDIR=/tmp/aesd-autograder
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.15.163
 BUSYBOX_VERSION=1_33_1
@@ -97,22 +98,22 @@ sudo mknod -m 666 dev/null c 1 3
 sudo mknod -m 600 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
-ls -al
-cd ./finder-app/
+ls -al "${SCRIPT_DIR}/"
+cd "${SCRIPT_DIR}/finder-app"
 make clean
 make CROSS_COMPILE=aarch64-linux-gnu- writer
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-cd "$OUTDIR"
-cp ./writer ./rootfs/home
-cp ./finder.sh ./rootfs/home
-cp ./finder-test.sh ./rootfs/home
-cp ./autorun-qemu.sh ./rootfs/home
-cp ./conf/username.txt ./rootfs/home/conf
-cp ./conf/assignment.txt ./rootfs/home/conf
-cp ./writer.sh ./rootfs/home
+#cd "$OUTDIR"
+cp ./writer "$OUTDIR/rootfs/home"
+cp ./finder.sh "$OUTDIR/rootfs/home"
+cp ./finder-test.sh "$OUTDIR/rootfs/home"
+cp ./autorun-qemu.sh "$OUTDIR/rootfs/home"
+cp ./conf/username.txt "$OUTDIR/rootfs/home/conf"
+cp ./conf/assignment.txt "$OUTDIR/rootfs/home/conf"
+cp ./writer.sh "$OUTDIR/rootfs/home"
 # TODO: Chown the root  directory
-cd ./rootfs/
+cd "$OUTDIR/rootfs/"
 sudo chown -R root:root *
 
 # TODO: Create initramfs.cpio.gz
