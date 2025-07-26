@@ -48,6 +48,10 @@ jobs:
             psmisc
       - name: Install required packages
         run: sudo apt-get update && sudo apt-get install -y cpio
+      - name: Install QEMU for AArch64
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-arm qemu-efi qemu-system-common qemu-system-aarch64
       # - name: Prepare /tmp/aesd-autograder from outdir_assign3
       #   run: |
       #     sudo mkdir -p /tmp/aesd-autograder
