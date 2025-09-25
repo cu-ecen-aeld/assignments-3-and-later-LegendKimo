@@ -8,6 +8,8 @@ CC := gcc
 $(info Compiling with host-compiler: $(CC))
 endif
 
+all: writer
+
 writer :
 	$(CC) writer.c -o writer
 
