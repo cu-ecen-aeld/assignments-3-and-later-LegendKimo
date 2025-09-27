@@ -1,62 +1,26 @@
 name: assignment-test
-
 on:
-  push:
-    tags-ignore:
-      - '*'
-    branches:
-      - '*'
-
+    push:
+        tags-ignore:
+            - '*'
+        branches:
+            - '*'
 jobs:
-  unit-test:
-    container: cuaesd/aesd-autotest:24-unit-test
-    runs-on: self-hosted
-
-    steps:
-      - name: Clean workspace
-        run: |
-          echo "Cleaning workspace..."
-          rm -rf *
-          rm -rf .git
-
-      - name: Manual checkout at commit
-        run: |
-          echo "Cloning repository"
-          git clone https://github.com/${{ github.repository }} repo
-          cd repo
-          git checkout $GITHUB_SHA
-          git reset --hard $GITHUB_SHA
-          git submodule sync
-          git submodule update --init --recursive
-          cp -r . ..
-
-      - name: Confirm checked out commit
-        run: |
-          echo "HEAD: $(git rev-parse HEAD)"
-          git log -1
-
-      - name: Install kernel build dependencies
-        run: |
-          apt-get update
-          apt-get install -y \
-            gcc-aarch64-linux-gnu \
-            flex \
-            bison \
-            libssl-dev \
-            libelf-dev \
-            bc \
-            psmisc
-      - name: Install required packages
-        run: sudo apt-get update && sudo apt-get install -y cpio
-      - name: Install QEMU for AArch64
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-system-arm qemu-efi qemu-system-common qemu-system-aarch64
-      # - name: Prepare /tmp/aesd-autograder from outdir_assign3
-      #   run: |
-      #     sudo mkdir -p /tmp/aesd-autograder
-      #     sudo cp -v /home/kkhal/Documents/outdir_assign3/* /tmp/aesd-autograder/
-      #     ls -lh /tmp/aesd-autograder
-      - name: Run fulltest
-        run: ./full-test.sh
-
+    unit-test:
+        container: cuaesd/aesd-autotest:24-unit-test
+        runs-on: self-hosted
+        steps:
+          - uses: actions/checkout@v2
+          - name: Checkout submodules
+            run : git submodule update --init --recursive
+          - name: Run unit test
+            run: ./unit-test.sh
+    full-test:
+        container: cuaesd/aesd-autotest:24-assignment5
+        runs-on: self-hosted
+        steps:
+          - uses: actions/checkout@v2
+          - name: Checkout submodules
+            run : git submodule update --init --recursive
+          - name: Run full test
+            run: ./full-test.sh
